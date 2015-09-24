@@ -1,0 +1,15 @@
+[package]
+name          = "opengles"
+version       = "0.1.0"
+authors       = ["Sean Kerr <sean@code-box.org>"]
+license       = "Apache-2.0"
+description   = "Rust bindings for OpenGL ES 2.0"
+homepage      = "https://github.com/seankerr/rust-opengles"
+repository    = "https://github.com/seankerr/rust-opengles"
+readme        = "README.md"
+keywords      = ["opengl", "opengl es", "gles"]
+exclude       = [".gitignore"]
+
+[dependencies]
+khronos = "0.1.1"
+libc    = "0.1.10"
