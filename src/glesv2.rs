@@ -643,9 +643,12 @@ pub fn clear_stencil(stencil: GLint) {
     }
 }
 
-pub fn color_mask(red: GLboolean, green: GLboolean, blue: GLboolean, alpha: GLboolean) {
+pub fn color_mask(red: bool, green: bool, blue: bool, alpha: bool) {
     unsafe {
-        ffi::glColorMask(red, green, blue, alpha)
+        ffi::glColorMask(if red { 1 } else { 0 },
+                         if green { 1 } else { 0 },
+                         if blue { 1 } else { 0 },
+                         if alpha { 1 } else { 0 })
     }
 }
 
@@ -747,9 +750,9 @@ pub fn depth_func(func: GLenum) {
     }
 }
 
-pub fn depth_mask(flag: GLboolean) {
+pub fn depth_mask(flag: bool) {
     unsafe {
-        ffi::glDepthMask(flag)
+        ffi::glDepthMask(if flag { 1 } else { 0 })
     }
 }
 
@@ -1303,9 +1306,9 @@ pub fn renderbuffer_storage(target: GLenum, internal_format: GLenum, width: GLsi
     }
 }
 
-pub fn sample_coverage(value: GLclampf, invert: GLboolean) {
+pub fn sample_coverage(value: GLclampf, invert: bool) {
     unsafe {
-        ffi::glSampleCoverage(value, invert)
+        ffi::glSampleCoverage(value, if invert { 1 } else { 0 })
     }
 }
 
@@ -1322,9 +1325,11 @@ pub fn shader_binary<T>(shaders: &[GLuint], data_format: GLenum, data: &[T], len
     }
 }
 
-pub fn shader_source(shader: GLuint, sources: &[&[u8]]) {
+pub fn shader_source(shader: GLuint, source: &[i8]) {
     unsafe {
-        //ffi::glShaderSource(shader,
+        let length: GLsizei = source.len() as GLsizei;
+
+        ffi::glShaderSource(shader, 1, source.as_ptr() as *const *const GLchar, &length)
     }
 }
 
@@ -1828,7 +1833,7 @@ mod ffi {
         pub fn glShaderBinary(n: GLsizei, shaders: *const GLuint, binaryformat: GLenum,
                               binary: *const GLvoid, length: GLsizei);
 
-        pub fn glShaderSource(shader: GLuint, count: GLsizei, string: *mut *const GLchar,
+        pub fn glShaderSource(shader: GLuint, count: GLsizei, string: *const *const GLchar,
                               length: *const GLint);
 
         pub fn glStencilFunc(func: GLenum, ref_: GLint, mask: GLuint);
