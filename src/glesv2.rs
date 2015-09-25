@@ -645,10 +645,10 @@ pub fn clear_stencil(stencil: GLint) {
 
 pub fn color_mask(red: bool, green: bool, blue: bool, alpha: bool) {
     unsafe {
-        ffi::glColorMask(if red { 1 } else { 0 },
-                         if green { 1 } else { 0 },
-                         if blue { 1 } else { 0 },
-                         if alpha { 1 } else { 0 })
+        ffi::glColorMask(red as GLboolean,
+                         green as GLboolean,
+                         blue as GLboolean,
+                         alpha as GLboolean)
     }
 }
 
@@ -752,7 +752,7 @@ pub fn depth_func(func: GLenum) {
 
 pub fn depth_mask(flag: bool) {
     unsafe {
-        ffi::glDepthMask(if flag { 1 } else { 0 })
+        ffi::glDepthMask(flag as GLboolean)
     }
 }
 
@@ -1308,7 +1308,7 @@ pub fn renderbuffer_storage(target: GLenum, internal_format: GLenum, width: GLsi
 
 pub fn sample_coverage(value: GLclampf, invert: bool) {
     unsafe {
-        ffi::glSampleCoverage(value, if invert { 1 } else { 0 })
+        ffi::glSampleCoverage(value, invert as GLboolean)
     }
 }
 
@@ -1510,7 +1510,7 @@ pub fn uniform4iv(location: GLint, values: &[GLint]) {
 pub fn uniform_matrix2fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
         ffi::glUniformMatrix2fv(location, (values.len() / 2) as GLsizei,
-                                if transpose { 1 } else { 0 },
+                                transpose as GLboolean,
                                 values.as_ptr() as *const GLfloat)
     }
 }
@@ -1518,7 +1518,7 @@ pub fn uniform_matrix2fv(location: GLint, transpose: bool, values: &[GLfloat]) {
 pub fn uniform_matrix3fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
         ffi::glUniformMatrix3fv(location, (values.len() / 3) as GLsizei,
-                                if transpose { 1 } else { 0 },
+                                transpose as GLboolean,
                                 values.as_ptr() as *const GLfloat)
     }
 }
@@ -1526,7 +1526,7 @@ pub fn uniform_matrix3fv(location: GLint, transpose: bool, values: &[GLfloat]) {
 pub fn uniform_matrix4fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
         ffi::glUniformMatrix4fv(location, (values.len() / 4) as GLsizei,
-                                if transpose { 1 } else { 0 },
+                                transpose as GLboolean,
                                 values.as_ptr() as *const GLfloat)
     }
 }
@@ -1595,7 +1595,7 @@ pub fn vertex_attrib_pointer<T>(index: GLuint, size: GLint, type_: GLenum,
                                 normalized: bool, stride: GLsizei, buffer: &[T]) {
     unsafe {
         ffi::glVertexAttribPointer(index, size, type_,
-                                   if normalized { 1 } else { 0 },
+                                   normalized as GLboolean,
                                    stride, buffer.as_ptr() as *const GLvoid)
     }
 }
