@@ -7,7 +7,7 @@ description   = "Rust bindings for OpenGL ES 2.0"
 homepage      = "https://github.com/seankerr/rust-opengles"
 repository    = "https://github.com/seankerr/rust-opengles"
 readme        = "README.md"
-keywords      = ["opengl", "opengl es", "gles"]
+keywords      = ["gl", "gles", "glesv2", "opengl", "opengles"]
 exclude       = [".gitignore"]
 
 [dependencies]
