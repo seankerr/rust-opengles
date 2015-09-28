@@ -1325,11 +1325,11 @@ pub fn shader_binary<T>(shaders: &[GLuint], data_format: GLenum, data: &[T], len
     }
 }
 
-pub fn shader_source(shader: GLuint, source: &[i8]) {
+pub fn shader_source(shader: GLuint, source: &[u8]) {
     unsafe {
         let length: GLsizei = source.len() as GLsizei;
 
-        ffi::glShaderSource(shader, 1, source.as_ptr() as *const *const GLchar, &length)
+        ffi::glShaderSource(shader, 1, &(source.as_ptr() as *const GLchar), &length)
     }
 }
 
