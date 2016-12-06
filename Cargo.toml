@@ -1,7 +1,7 @@
 [package]
 name          = "opengles"
-version       = "0.1.0"
-authors       = ["Sean Kerr <sean@code-box.org>"]
+version       = "0.1.1"
+authors       = ["Sean Kerr <sean@metatomic.io>"]
 license       = "Apache-2.0"
 description   = "Rust bindings for OpenGL ES 2.0"
 homepage      = "https://github.com/seankerr/rust-opengles"

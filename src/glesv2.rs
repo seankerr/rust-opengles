@@ -1,7 +1,7 @@
 // +-----------------------------------------------------------------------------------------------+
 // | Copyright 2015 Sean Kerr                                                                      |
 // |                                                                                               |
-// | Licensed under the Apache License, Version 2.0(the "License");                               |
+// | Licensed under the Apache License, Version 2.0(the "License");                                |
 // | you may not use this file except in compliance with the License.                              |
 // | You may obtain a copy of the License Author                                                   |
 // |                                                                                               |
@@ -13,7 +13,7 @@
 // | See the License for the specific language governing permissions and                           |
 // | limitations under the License.                                                                |
 // +-----------------------------------------------------------------------------------------------+
-// | Author: Sean Kerr <sean@code-box.org>                                                         |
+// | Author: Sean Kerr <sean@metatomic.io>                                                         |
 // +-----------------------------------------------------------------------------------------------+
 
 #![allow(dead_code)]
@@ -1594,9 +1594,24 @@ pub fn vertex_attrib4fv(index: GLuint, values: &[GLfloat]) {
 pub fn vertex_attrib_pointer<T>(index: GLuint, size: GLint, type_: GLenum,
                                 normalized: bool, stride: GLsizei, buffer: &[T]) {
     unsafe {
+        if buffer.len() == 0 {
+            ffi::glVertexAttribPointer(index, size, type_,
+                                       normalized as GLboolean,
+                                       stride, &0 as *const GLvoid)
+        } else {
+            ffi::glVertexAttribPointer(index, size, type_,
+                                       normalized as GLboolean,
+                                       stride, buffer.as_ptr() as *const GLvoid)
+        }
+    }
+}
+
+pub fn vertex_attrib_pointer_offset(index: GLuint, size: GLint, type_: GLenum,
+                                    normalized: bool, stride: GLsizei, offset: GLuint) {
+    unsafe {
         ffi::glVertexAttribPointer(index, size, type_,
                                    normalized as GLboolean,
-                                   stride, buffer.as_ptr() as *const GLvoid)
+                                   stride, offset as *const GLvoid)
     }
 }
 
@@ -1610,7 +1625,7 @@ pub fn viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
 // FFI
 // -------------------------------------------------------------------------------------------------
 
-mod ffi {
+pub mod ffi {
     use super::*;
 
     extern {
