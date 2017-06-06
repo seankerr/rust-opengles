@@ -539,7 +539,7 @@ pub fn bind_attrib_location(program: GLuint, index: GLuint, name: &str) {
     unsafe {
         let c_str = CString::new(name).unwrap();
 
-        ffi::glBindAttribLocation(program, index, c_str.as_ptr())
+        ffi::glBindAttribLocation(program, index, c_str.as_ptr() as *const c_char)
     }
 }
 
@@ -951,7 +951,7 @@ pub fn get_attrib_location(program: GLuint, name: &str) -> GLint {
     unsafe {
         let c_str = CString::new(name).unwrap();
 
-        ffi::glGetAttribLocation(program, c_str.as_ptr())
+        ffi::glGetAttribLocation(program, c_str.as_ptr() as *const c_char)
     }
 }
 
@@ -1118,7 +1118,7 @@ pub fn get_string(name: GLenum) -> Option<String> {
         let c_str = ffi::glGetString(name);
 
         if !c_str.is_null() {
-            match from_utf8(CStr::from_ptr(c_str as *const i8).to_bytes()) {
+            match from_utf8(CStr::from_ptr(c_str).to_bytes()) {
                 Ok(s)  => Some(s.to_string()),
                 Err(_) => None
             }
@@ -1597,7 +1597,7 @@ pub fn vertex_attrib_pointer<T>(index: GLuint, size: GLint, type_: GLenum,
         if buffer.len() == 0 {
             ffi::glVertexAttribPointer(index, size, type_,
                                        normalized as GLboolean,
-                                       stride, &0 as *const GLvoid)
+                                       stride, &0 as *const i32 as *const GLvoid)
         } else {
             ffi::glVertexAttribPointer(index, size, type_,
                                        normalized as GLboolean,
