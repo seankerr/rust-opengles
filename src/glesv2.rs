@@ -1168,9 +1168,10 @@ pub fn get_uniformiv(program: GLuint, location: GLint) -> GLint {
     }
 }
 
-pub fn get_uniform_location(program: GLuint, name: &GLchar) -> GLint {
+pub fn get_uniform_location(program: GLuint, name: &str) -> GLint {
     unsafe {
-        ffi::glGetUniformLocation(program, name)
+        let c_str = CString::new(name).unwrap();
+        ffi::glGetUniformLocation(program, c_str.as_ptr() as *const c_char)
     }
 }
 
