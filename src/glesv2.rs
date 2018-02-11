@@ -608,7 +608,7 @@ pub fn buffer_sub_data<T>(target: GLenum, offset: GLintptr, buffer: &[T]) {
     unsafe {
         let size = size_of::<T>();
 
-        ffi::glBufferSubData(target, (offset * (size as GLintptr)),
+        ffi::glBufferSubData(target, offset * (size as GLintptr),
                              (buffer.len() * size) as GLsizeiptr, buffer.as_ptr() as *const GLvoid)
     }
 }
