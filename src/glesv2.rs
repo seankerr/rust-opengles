@@ -612,7 +612,7 @@ pub fn buffer_sub_data<T>(target: GLenum, offset: GLintptr, buffer: &[T]) {
         let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
         			else { buffer.as_ptr() as *const GLvoid };
 
-        ffi::glBufferSubData(target, (offset * (size as GLintptr)),
+        ffi::glBufferSubData(target, offset * (size as GLintptr),
                              (buffer.len() * size) as GLsizeiptr, ptr)
     }
 }
@@ -1181,9 +1181,10 @@ pub fn get_uniformiv(program: GLuint, location: GLint) -> GLint {
     }
 }
 
-pub fn get_uniform_location(program: GLuint, name: &GLchar) -> GLint {
+pub fn get_uniform_location(program: GLuint, name: &str) -> GLint {
     unsafe {
-        ffi::glGetUniformLocation(program, name)
+        let c_str = CString::new(name).unwrap();
+        ffi::glGetUniformLocation(program, c_str.as_ptr() as *const c_char)
     }
 }
 
@@ -1535,7 +1536,7 @@ pub fn uniform_matrix2fv(location: GLint, transpose: bool, values: &[GLfloat]) {
 
 pub fn uniform_matrix3fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
-        ffi::glUniformMatrix3fv(location, (values.len() / 3) as GLsizei,
+        ffi::glUniformMatrix3fv(location, (values.len() / 9) as GLsizei,
                                 transpose as GLboolean,
                                 values.as_ptr() as *const GLfloat)
     }

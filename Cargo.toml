@@ -1,6 +1,6 @@
 [package]
 name          = "opengles"
-version       = "0.1.1"
+version       = "0.1.2"
 authors       = ["Sean Kerr <sean@metatomic.io>"]
 license       = "Apache-2.0"
 description   = "Rust bindings for OpenGL ES 2.0"
@@ -11,5 +11,5 @@ keywords      = ["gl", "gles", "glesv2", "opengl", "opengles"]
 exclude       = [".gitignore"]
 
 [dependencies]
-khronos = "0.1.1"
+khronos = "0.1.2"
 libc    = "0.1.10"
