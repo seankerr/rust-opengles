@@ -599,17 +599,21 @@ pub fn blend_func_separate(src_rgb: GLenum, dst_rgb: GLenum, src_alpha: GLenum, 
 
 pub fn buffer_data<T>(target: GLenum, buffer: &[T], usage: GLenum) {
     unsafe {
-        ffi::glBufferData(target, (buffer.len() * size_of::<T>()) as GLsizeiptr,
-                          buffer.as_ptr() as *const GLvoid, usage)
+    	let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+    				else { buffer.as_ptr() as *const GLvoid };
+
+        ffi::glBufferData(target, (buffer.len() * size_of::<T>()) as GLsizeiptr, ptr, usage)
     }
 }
 
 pub fn buffer_sub_data<T>(target: GLenum, offset: GLintptr, buffer: &[T]) {
     unsafe {
         let size = size_of::<T>();
+        let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+        			else { buffer.as_ptr() as *const GLvoid };
 
         ffi::glBufferSubData(target, (offset * (size as GLintptr)),
-                             (buffer.len() * size) as GLsizeiptr, buffer.as_ptr() as *const GLvoid)
+                             (buffer.len() * size) as GLsizeiptr, ptr)
     }
 }
 
@@ -662,8 +666,11 @@ pub fn compressed_tex_image_2d<T>(target: GLenum, level: GLint, internal_format:
                                   width: GLsizei, height: GLsizei, border: GLint,
                                   image_size: GLsizei, buffer: &[T]) {
     unsafe {
+    	let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+    				else { buffer.as_ptr() as *const GLvoid };
+
         ffi::glCompressedTexImage2D(target, level, internal_format, width, height, border,
-                                    image_size, buffer.as_ptr() as *const GLvoid)
+                                    image_size, ptr)
     }
 }
 
@@ -671,8 +678,11 @@ pub fn compressed_tex_sub_image_2d<T>(target: GLenum, level: GLint, x_offset: GL
                                       y_offset: GLint, width: GLsizei, height: GLsizei,
                                       format: GLenum, image_size: GLsizei, buffer: &[T]) {
     unsafe {
+		let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+					else { buffer.as_ptr() as *const GLvoid };
+
         ffi::glCompressedTexSubImage2D(target, level, x_offset, y_offset, width, height, format,
-                                       image_size, buffer.as_ptr() as *const GLvoid)
+                                       image_size, ptr)
     }
 }
 
@@ -788,7 +798,10 @@ pub fn draw_arrays(mode: GLenum, first: GLint, count: GLsizei) {
 
 pub fn draw_elements<T>(mode: GLenum, count: GLsizei, type_: GLenum, indices: &[T]) {
     unsafe {
-        ffi::glDrawElements(mode, count, type_, indices.as_ptr() as *const GLvoid)
+		let ptr = if indices.len() == 0 { 0 as *const GLvoid }
+					else { indices.as_ptr() as *const GLvoid };
+
+        ffi::glDrawElements(mode, count, type_, ptr)
     }
 }
 
@@ -1276,8 +1289,7 @@ pub fn polygon_offset(factor: GLfloat, units: GLfloat) {
 pub fn read_pixels<T>(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum,
                       type_: GLenum, buffer: &mut [T]) {
     unsafe {
-        ffi::glReadPixels(x, y, width, height, format, type_,
-                          buffer.as_mut_ptr() as *mut GLvoid)
+        ffi::glReadPixels(x, y, width, height, format, type_, buffer.as_mut_ptr() as *mut GLvoid)
     }
 }
 
@@ -1320,8 +1332,10 @@ pub fn scissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
 
 pub fn shader_binary<T>(shaders: &[GLuint], data_format: GLenum, data: &[T], length: GLsizei) {
     unsafe {
-        ffi::glShaderBinary(shaders.len() as GLsizei, shaders.as_ptr(), data_format,
-                            data.as_ptr() as *const GLvoid, length)
+    	let ptr = if data.len() == 0 { 0 as *const GLvoid }
+    				else { data.as_ptr() as *const GLvoid };
+
+        ffi::glShaderBinary(shaders.len() as GLsizei, shaders.as_ptr(), data_format, ptr, length)
     }
 }
 
@@ -1373,8 +1387,10 @@ pub fn tex_image_2d<T>(target: GLenum, level: GLint, internal_format: GLint, wid
                        height: GLsizei, border: GLint, format: GLenum, type_: GLenum,
                        buffer: &[T]) {
     unsafe {
-        ffi::glTexImage2D(target, level, internal_format, width, height, border, format, type_,
-                          buffer.as_ptr() as *const GLvoid)
+    	let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+    				else { buffer.as_ptr() as *const GLvoid };
+
+        ffi::glTexImage2D(target, level, internal_format, width, height, border, format, type_, ptr)
     }
 }
 
@@ -1406,8 +1422,10 @@ pub fn tex_sub_image_2d<T>(target: GLenum, level: GLint, x_offset: GLint, y_offs
                            width: GLsizei, height: GLsizei, format: GLenum,
                            type_: GLenum, buffer: &[T]) {
     unsafe {
-        ffi::glTexSubImage2D(target, level, x_offset, y_offset, width, height, format, type_,
-                             buffer.as_ptr() as *const GLvoid)
+    	let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+    				else { buffer.as_ptr() as *const GLvoid };
+
+        ffi::glTexSubImage2D(target, level, x_offset, y_offset, width, height, format, type_, ptr)
     }
 }
 
@@ -1594,15 +1612,10 @@ pub fn vertex_attrib4fv(index: GLuint, values: &[GLfloat]) {
 pub fn vertex_attrib_pointer<T>(index: GLuint, size: GLint, type_: GLenum,
                                 normalized: bool, stride: GLsizei, buffer: &[T]) {
     unsafe {
-        if buffer.len() == 0 {
-            ffi::glVertexAttribPointer(index, size, type_,
-                                       normalized as GLboolean,
-                                       stride, &0 as *const i32 as *const GLvoid)
-        } else {
-            ffi::glVertexAttribPointer(index, size, type_,
-                                       normalized as GLboolean,
-                                       stride, buffer.as_ptr() as *const GLvoid)
-        }
+    	let ptr = if buffer.len() == 0 { 0 as *const GLvoid }
+    				else { buffer.as_ptr() as *const GLvoid };
+
+        ffi::glVertexAttribPointer(index, size, type_, normalized as GLboolean, stride, ptr)
     }
 }
 
