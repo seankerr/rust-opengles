@@ -1131,7 +1131,7 @@ pub fn get_string(name: GLenum) -> Option<String> {
         let c_str = ffi::glGetString(name);
 
         if !c_str.is_null() {
-            match from_utf8(CStr::from_ptr(c_str).to_bytes()) {
+            match from_utf8(CStr::from_ptr(c_str as *const _).to_bytes()) {
                 Ok(s)  => Some(s.to_string()),
                 Err(_) => None
             }
