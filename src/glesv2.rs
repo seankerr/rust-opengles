@@ -1395,6 +1395,11 @@ pub fn stencil_op_separate(face: GLenum, fail: GLenum, z_fail: GLenum, z_pass: G
     unsafe { ffi::glStencilOpSeparate(face, fail, z_fail, z_pass) }
 }
 
+
+/// Upload image data to a texture
+///
+/// If `buffer` length is 0, the function allocates an uninitialized texture for given size and
+/// format.
 pub fn tex_image_2d<T>(
     target: GLenum,
     level: GLint,
