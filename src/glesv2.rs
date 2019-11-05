@@ -68,7 +68,7 @@ pub mod types {
     pub type GLsizeiptr = khronos_ssize_t;
 }
 
-use self::types::*;
+pub use self::types::*;
 
 // -------------------------------------------------------------------------------------------------
 // STRUCTS
@@ -521,7 +521,7 @@ pub mod constants {
     pub const GL_INVALID_FRAMEBUFFER_OPERATION: GLuint = 0x0506;
 }
 
-use self::constants::*;
+pub use self::constants::*;
 
 // -------------------------------------------------------------------------------------------------
 // FUNCTIONS
