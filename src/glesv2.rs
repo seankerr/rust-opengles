@@ -1551,7 +1551,7 @@ pub fn uniform_matrix2fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
         ffi::glUniformMatrix2fv(
             location,
-            (values.len() / 2) as GLsizei,
+            (values.len() / 4) as GLsizei,
             transpose as GLboolean,
             values.as_ptr() as *const GLfloat,
         )
@@ -1573,7 +1573,7 @@ pub fn uniform_matrix4fv(location: GLint, transpose: bool, values: &[GLfloat]) {
     unsafe {
         ffi::glUniformMatrix4fv(
             location,
-            (values.len() / 4) as GLsizei,
+            (values.len() / 16) as GLsizei,
             transpose as GLboolean,
             values.as_ptr() as *const GLfloat,
         )

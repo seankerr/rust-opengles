@@ -1,6 +1,6 @@
 [package]
 name          = "opengles"
-version       = "0.2.0"
+version       = "0.2.1"
 authors       = ["Sean Kerr <sean@metatomic.io>", "Lauri Gustafsson <me@gustafla.space>"]
 license       = "Apache-2.0"
 description   = "Rust bindings for OpenGL ES 2.0"
